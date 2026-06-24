@@ -18,10 +18,10 @@ async function initDB() {
 
   await db.exec(`
     CREATE TABLE IF NOT EXIST users (
-    id          TEXT PRIMARY KEY,
-    email       TEXT NOT NULL UNIQUE, 
-    password    TEXT NOT NULL, 
-    name        TEXT NOT NULL
+    id            TEXT PRIMARY KEY,
+    email         TEXT NOT NULL UNIQUE, 
+    password_hash TEXT NOT NULL, 
+    name          TEXT NOT NULL
     );
 
     CREATE TABLE IF NOT EXIST projects (
@@ -51,7 +51,7 @@ async function initDB() {
     PRIMARY KEY (project_id, user_id)
     );
     `);
-  console.log('Base de données prête')
+  console.log("Base de données prête");
 }
 
-module.exports = { getDB, initDB }
+module.exports = { getDB, initDB };
