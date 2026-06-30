@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:backend": "cd backend && npm run dev",
-    "dev:all": "concurrently \"pnpm dev\" \"npm run dev:backend\""
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:backend\""
   },
   "dependencies": {
     "react": "^19.2.6",
