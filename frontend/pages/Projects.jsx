@@ -5,20 +5,27 @@ export default function Projects() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading]   = useState(true)
   const [title, setTitle]       = useState('')
+  const [erreur, setErreur]     = useState('')
 
   // Au chargement de la page : on va chercher les projets
   useEffect(() => {
     api.getProjects()
       .then(setProjects)
+      .catch((err) => setErreur(err.message))
       .finally(() => setLoading(false))
   }, [])
 
   const handleCreate = async (e) => {
     e.preventDefault()
     if (!title) return
-    const nouveau = await api.createProject({ title })
-    setProjects([nouveau, ...projects])   // ajoute en haut de la liste
-    setTitle('')                            // vide le champ
+    setErreur('')
+    try {
+      const nouveau = await api.createProject({ title })
+      setProjects([nouveau, ...projects])   // ajoute en haut de la liste
+      setTitle('')                          // vide le champ
+    } catch (err) {
+      setErreur(err.message)
+    }
   }
 
   if (loading) return <p>Chargement…</p>
@@ -32,6 +39,8 @@ export default function Projects() {
           value={title} onChange={(e) => setTitle(e.target.value)} />
         <button>Créer</button>
       </form>
+
+      {erreur && <p style={{ color: 'red' }}>{erreur}</p>}
 
       {projects.length === 0
         ? <p>Aucun projet. Créez-en un !</p>
