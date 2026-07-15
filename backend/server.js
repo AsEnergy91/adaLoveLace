@@ -3,18 +3,19 @@ import cors from "cors";
 import "dotenv/config";
 import { initDB } from "./db/database.js";
 import authRoutes from "./routes/auth.js";
+import projectRoutes from "./routes/projects.js";
+import taskRoutes from "./routes/tasks.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// --- Middlewares globaux (s'exécutent avant les routes) ---
-app.use(cors()); // autorise le frontend à appeler l'API
-app.use(express.json()); // lit le JSON envoyé → remplit req.body
+app.use(cors());
+app.use(express.json());
 
-// --- Routes ---
-app.use('/api/auth', authRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/tasks", taskRoutes);
 
-// --- Démarrage : on prépare la base PUIS on lance le serveur ---
 async function start() {
   await initDB();
   console.log("Base de données prête");
