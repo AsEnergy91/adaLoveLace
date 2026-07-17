@@ -2,6 +2,7 @@ const express = require('express')
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const { getDB } = require('../db/database')
+const jwt = require("jsonwebtoken")
 
 const router = express.Router()
 
@@ -37,6 +38,40 @@ res.status(201).json({ id, pseudo, email})
     res.status(500).json({ error : 'Erreur Serveur'})
 }
 
+})
+
+router.post('/login', async (req, res) => {
+   const { email, password } = req.body
+
+   if (!email || !password) {
+    return res.status(400).json({error: `Email et mot de passe requis`})
+   }
+
+   try {
+    const db = await getDB()
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email])
+
+    if (!user) {
+        return res.status(401).json({error :`Identifiants incorrects`})
+    }
+    const valide = await bcrypt.compare(password, user.password_hash)
+    if (!valide) {
+      return res.status(401).json({ error: 'Identifiants incorrects' })
+    }
+
+    const token = jwt.sign({ id: user.id, email: user.email },
+      'clesecrete2026',
+      { expiresIn: '7d' })
+
+        res.json({
+            token,
+                user: { id: user.id, name: user.pseudo, email: user.email }
+   })
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erreur serveur' })
+  }
 })
 
 module.exports = router
