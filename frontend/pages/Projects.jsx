@@ -34,23 +34,31 @@ export default function Projects() {
     <div>
       <h1>Mes projets</h1>
 
-      <form onSubmit={handleCreate}>
-        <input placeholder="Nom du projet"
-          value={title} onChange={(e) => setTitle(e.target.value)} />
+      <form className="form" onSubmit={handleCreate}>
+        <label htmlFor="titre-projet" className="sr-only">Nom du projet</label>
+        <input
+          id="titre-projet"
+          placeholder="Nom du projet"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <button>Créer</button>
       </form>
 
-      {erreur && <p style={{ color: 'red' }}>{erreur}</p>}
+      {erreur && <p className="erreur">{erreur}</p>}
 
-      {projects.length === 0
-        ? <p>Aucun projet. Créez-en un !</p>
-        : projects.map((p) => (
-            <div key={p.id}>
+      {projects.length === 0 ? (
+        <p className="vide">Aucun projet. Créez-en un !</p>
+      ) : (
+        <div className="grille">
+          {projects.map((p) => (
+            <div className="carte" key={p.id}>
               <h3>{p.title}</h3>
-              <span>{p.status}</span>
+              <span className="badge">{p.status}</span>
             </div>
-          ))
-      }
+          ))}
+        </div>
+      )}
     </div>
   )
 }

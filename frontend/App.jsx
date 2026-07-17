@@ -3,6 +3,7 @@ import Login     from './pages/Login'
 import Register  from './pages/Register'
 import Projects  from './pages/Projects'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Tasks from './pages/Tasks'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       {/* Pages protégées */}
       <Route element={<ProtectedRoute />}>
         <Route path="/projects" element={<Projects />} />
+        <Route path="/tasks" element={<Tasks />} />
       </Route>
 
       {/* Tout le reste renvoie au login */}
