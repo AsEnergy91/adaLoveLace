@@ -6,9 +6,10 @@ export default function ProtectedRoute() {
   if (!token) return <Navigate to="/login" replace />
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="layout">
+      <a href="#principal" className="skip">Aller au contenu</a>
       <Sidebar />
-      <main style={{ flex: 1 }}>
+      <main id="principal" className="contenu">
         <Outlet />
       </main>
     </div>

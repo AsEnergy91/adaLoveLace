@@ -13,7 +13,8 @@ export default function Login() {
     setError('')
     try {
       const data = await api.login({ email, password })
-      localStorage.setItem('token', data.token)   // on garde le bracelet
+      localStorage.setItem('token', data.token) // on garde le bracelet
+      localStorage.setItem('user', JSON.stringify(data.user))  
       navigate('/projects')                       // on entre dans l'app
     } catch (err) {
       setError(err.message)

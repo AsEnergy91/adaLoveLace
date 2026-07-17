@@ -30,4 +30,9 @@ export const api = {
   getTasks: () => request("/api/tasks"),
   createTask: (d) =>
     request("/api/tasks", { method: "POST", body: JSON.stringify(d) }),
+  updateTask: (id, d) =>
+    request(`/api/tasks/${id}`, { method: "PUT", body: JSON.stringify(d) }),
+  deleteTask: (id) =>
+    request(`/api/tasks/${id}`, { method: "DELETE" }),
 };
+
