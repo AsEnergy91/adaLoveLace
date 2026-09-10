@@ -1,7 +1,9 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { getDB } from "../db/database.js";
+
 
 const router = express.Router();
 
@@ -18,12 +20,9 @@ router.post("/register", async (req, res) => {
     const db = await getDB();
 
     // 2. Vérifier que l'email n'est pas déjà pris
-    const existant = await db.get(
-      "SELECT id FROM users WHERE email = ?",
-      email,
-    );
+    const existant = await db.get("SELECT id FROM users WHERE email = ?", email);
     if (existant) {
-      return res.status(409).json({ error: "Cet email est déjà utilisé" });
+      return res.status(409).json({ error: "Cet email est invalide" });
     }
 
     // 3. Chiffrer le mot de passe (jamais en clair !)
@@ -62,21 +61,20 @@ router.post("/login", async (req, res) => {
     const user = await db.get("SELECT * FROM users WHERE email = ?", email);
 
     // 2. Comparer le mot de passe fourni avec le hash stocké
-    //    (même message si l'email OU le mot de passe est faux : on n'aide pas un attaquant)
     const motDePasseOk =
       user && (await bcrypt.compare(password, user.password));
     if (!motDePasseOk) {
       return res.status(401).json({ error: "Identifiants incorrects" });
     }
 
-    // 3. Fabriquer le token JWT (le "bracelet d'entrée")
+    // 3. Fabriquer le token JWT
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
 
-    // 4. Renvoyer le token et les infos publiques de l'utilisateur
+    // 4. Renvoyer le token et les infos publiques
     res.json({
       token,
       user: { id: user.id, email: user.email, name: user.name },

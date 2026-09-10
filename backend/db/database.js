@@ -44,6 +44,7 @@ export async function initDB() {
       status TEXT DEFAULT 'todo',
       project_id TEXT NOT NULL,
       assigned_to TEXT,
+      due_date TEXT,
       created_at TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (project_id) REFERENCES projects(id),
       FOREIGN KEY (assigned_to) REFERENCES users(id)
@@ -52,9 +53,22 @@ export async function initDB() {
     CREATE TABLE IF NOT EXISTS project_members (
       project_id TEXT NOT NULL,
       user_id TEXT NOT NULL,
+       role TEXT NOT NULL DEFAULT 'member',   -- 'owner' ou 'member'
+       joined_at TEXT DEFAULT (datetime('now')),
       PRIMARY KEY (project_id, user_id),
       FOREIGN KEY (project_id) REFERENCES projects(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
+      CREATE TABLE IF NOT EXISTS invitations (
+    code TEXT PRIMARY KEY,
+   project_id TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'member',
+    expires_at TEXT NOT NULL,
+   used INTEGER NOT NULL DEFAULT 0,        -- 0 = libre, 1 = consommé
+    created_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (project_id) REFERENCES projects(id)
+);
   `);
 }
+
+
