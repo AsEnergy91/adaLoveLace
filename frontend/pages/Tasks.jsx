@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { api } from '../services/api'
 import { useProjetActif } from '../context/ProjetActifContext'
+import StatutBarre from '../components/StatutBarre'
 
 export default function Tasks() {
   const { projetActif, setProjetActif } = useProjetActif()
@@ -37,6 +38,14 @@ export default function Tasks() {
       setErreur(err.message)
     }
   }
+  const changerStatut = async (tache, nouveauStatut) => {
+  try {
+    const maj = await api.updateTask(tache.id, { status: nouveauStatut })
+    setTasks(tasks.map((t) => (t.id === maj.id ? maj : t)))
+  } catch (err) {
+    setErreur(err.message)
+  }
+}
 
   return (
     <div>
@@ -70,7 +79,7 @@ export default function Tasks() {
           {tasks.map((t) => (
             <div className="carte" key={t.id}>
               <h3>{t.title}</h3>
-              <span className="badge">{t.status}</span>
+              <StatutBarre statut={t.status} onChange={(s) => changerStatut(t, s)} />
             </div>
           ))}
         </div>

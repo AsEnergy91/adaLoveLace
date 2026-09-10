@@ -109,3 +109,28 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.progress {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+}
+.segment {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.segment:hover { opacity: 0.8; }
+.segment.actif-todo { background: #c99a2e; }
+.segment.actif-progress { background: #3a6ea5; }
+.segment.actif-done { background: #2e9c8b; }
+.progress-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 6px;
+}
