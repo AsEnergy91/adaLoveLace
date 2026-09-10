@@ -165,3 +165,9 @@ code {
 .cal-case { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 6px; }
 .cal-case:not(.vide):hover { background: var(--bg); }
 .cal-point { position: absolute; bottom: 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+.cal-case { border: none; background: none; font-family: inherit; color: var(--text); cursor: pointer; }
+.cal-case.vide { cursor: default; }
+.cal-selectionne { background: var(--accent-soft) !important; font-weight: 700; }
+.cal-detail { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.cal-detail-titre { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }

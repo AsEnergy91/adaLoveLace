@@ -10,6 +10,7 @@ export default function Tasks() {
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(true)
   const [erreur, setErreur] = useState('')
+  const [dueDate, setDueDate] = useState('')
 
   // Charger la liste des projets une fois (pour le sélecteur)
   useEffect(() => {
@@ -27,17 +28,22 @@ export default function Tasks() {
   }, [projetActif])
 
   const handleCreate = async (e) => {
-    e.preventDefault()
-    if (!title || projetActif === 'tous') return
-    setErreur('')
-    try {
-      const nouvelle = await api.createTask({ title, project_id: projetActif })
-      setTasks([nouvelle, ...tasks])
-      setTitle('')
-    } catch (err) {
-      setErreur(err.message)
-    }
+  e.preventDefault()
+  if (!title || projetActif === 'tous') return
+  setErreur('')
+  try {
+    const nouvelle = await api.createTask({
+      title,
+      project_id: projetActif,
+      due_date: dueDate || null,   // ← l'échéance (ou rien)
+    })
+    setTasks([nouvelle, ...tasks])
+    setTitle('')
+    setDueDate('')                 // ← on vide le champ date
+  } catch (err) {
+    setErreur(err.message)
   }
+}
   const changerStatut = async (tache, nouveauStatut) => {
   try {
     const maj = await api.updateTask(tache.id, { status: nouveauStatut })
@@ -60,10 +66,12 @@ export default function Tasks() {
         </select>
       </div>
 
-      {projetActif !== 'tous' && (
+     {projetActif !== 'tous' && (
         <form className="form" onSubmit={handleCreate}>
           <input placeholder="Nouvelle tâche" value={title}
             onChange={(e) => setTitle(e.target.value)} />
+          <input type="date" value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)} />
           <button>Ajouter</button>
         </form>
       )}
@@ -79,6 +87,7 @@ export default function Tasks() {
           {tasks.map((t) => (
             <div className="carte" key={t.id}>
               <h3>{t.title}</h3>
+              {t.due_date && <p className="task-echeance">Échéance : {t.due_date}</p>}
               <StatutBarre statut={t.status} onChange={(s) => changerStatut(t, s)} />
             </div>
           ))}

@@ -10,6 +10,7 @@ export default function MiniCalendrier({ taches = [] }) {
     const d = new Date()
     return { annee: d.getFullYear(), mois: d.getMonth() } // mois : 0-11
   })
+  const [jourSelectionne, setJourSelectionne] = useState(null)
 
   const { annee, mois } = curseur
 
@@ -47,6 +48,11 @@ export default function MiniCalendrier({ taches = [] }) {
     return `${annee}-${m}-${jj}`
   }
 
+  // tâches du jour sélectionné
+  const tachesDuJour = jourSelectionne
+    ? taches.filter((t) => t.due_date?.slice(0, 10) === jourSelectionne)
+    : []
+
   return (
     <div className="cal">
       <div className="cal-entete">
@@ -55,19 +61,47 @@ export default function MiniCalendrier({ taches = [] }) {
         <button onClick={moisSuivant} aria-label="Mois suivant">›</button>
       </div>
 
-      <div className="cal-grille">   
+      <div className="cal-grille">
         {JOURS.map((j, i) => <div key={`j${i}`} className="cal-jour-nom">{j}</div>)}
         {cases.map((j, i) => {
           if (j === null) return <div key={`v${i}`} className="cal-case vide"></div>
-          const nb = parDate[cleJour(j)] || 0
+          const cle = cleJour(j)
+          const nb = parDate[cle] || 0
+          const estSelectionne = jourSelectionne === cle
           return (
-            <div key={`d${j}`} className="cal-case">
+            <button
+              key={`d${j}`}
+              className={`cal-case ${estSelectionne ? 'cal-selectionne' : ''}`}
+              onClick={() => setJourSelectionne(estSelectionne ? null : cle)}
+            >
               {j}
               {nb > 0 && <span className="cal-point" title={`${nb} tâche(s)`}></span>}
-            </div>
+            </button>
           )
         })}
       </div>
+
+      {jourSelectionne && (
+        <div className="cal-detail">
+          <div className="cal-detail-titre">Tâches du {jourSelectionne}</div>
+          {tachesDuJour.length === 0 ? (
+            <p className="vide">Aucune tâche ce jour.</p>
+          ) : (
+            <ul className="liste">
+              {tachesDuJour.map((t) => (
+                <li key={t.id}>
+                  <span>{t.title}</span>
+                  <span className={`puce puce-${t.status}`}>
+                    {t.status === 'todo' ? 'À faire'
+                      : t.status === 'in_progress' ? 'En cours'
+                      : 'Terminé'}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   )
 }
