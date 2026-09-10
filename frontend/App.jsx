@@ -1,21 +1,27 @@
-import { useState } from 'react'
-import './App.css'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Projects from './pages/Projects'
+import Tasks from './pages/Tasks'
+import Dashboard from './pages/Dashboard'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <div className="app">
-      <h1>AdaLoveLace</h1>
-      <p>Mon application de gestion de projet 🚀</p>
-      <button
-        type="button"
-        onClick={() => setCount((count) => count + 1)}
-      >
-        J'ai cliqué {count} fois
-      </button>
-    </div>
+    <Routes>
+      {/* Pages publiques */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Pages protégées (sidebar + contenu) */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/tasks" element={<Tasks />} />
+      </Route>
+
+      {/* Tout le reste renvoie au login */}
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   )
 }
-
-export default App
