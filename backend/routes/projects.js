@@ -269,4 +269,23 @@ router.delete('/me', async (req, res) => {
   }
 })
 
+// Lister les membres d'un projet (réservé aux membres du projet)
+router.get('/:id/members', requireRole('member'), async (req, res) => {
+  try {
+    const db = await getDB()
+    const membres = await db.all(
+      `SELECT users.id, users.name, users.email, project_members.role, project_members.joined_at
+       FROM project_members
+       JOIN users ON users.id = project_members.user_id
+       WHERE project_members.project_id = ?
+       ORDER BY project_members.joined_at ASC`,
+      [req.params.id]
+    )
+    res.json(membres)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ error: 'Erreur serveur' })
+  }
+})
+
 export default router;

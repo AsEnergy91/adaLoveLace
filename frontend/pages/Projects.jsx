@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { api } from '../services/api'
+import { Link } from 'react-router-dom'
 
 export default function Projects() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [title, setTitle] = useState('')
   const [erreur, setErreur] = useState('')
+  const [codeRejoindre, setCodeRejoindre] = useState('')
 
   useEffect(() => {
     api.getProjects()
@@ -27,6 +29,19 @@ export default function Projects() {
     }
   }
 
+  const handleJoin = async (e) => {
+  e.preventDefault()
+  if (!codeRejoindre) return
+  setErreur('')
+  try {
+    const res = await api.joinProject(codeRejoindre)
+    setProjects([res.projet, ...projects])   // ajoute le projet rejoint à la liste
+    setCodeRejoindre('')
+  } catch (err) {
+    setErreur(err.message)
+  }
+}
+
   if (loading) return <p className="vide">Chargement…</p>
 
   return (
@@ -39,6 +54,12 @@ export default function Projects() {
         <button>Créer</button>
       </form>
 
+      <form className="form" onSubmit={handleJoin}>
+        <input placeholder="Code d'invitation" value={codeRejoindre}
+          onChange={(e) => setCodeRejoindre(e.target.value)} />
+        <button>Rejoindre</button>
+      </form>
+
       {erreur && <p className="erreur">{erreur}</p>}
 
       {projects.length === 0 ? (
@@ -46,10 +67,10 @@ export default function Projects() {
       ) : (
         <div className="grille">
           {projects.map((p) => (
-            <div className="carte" key={p.id}>
+            <Link to={`/projects/${p.id}`} className="carte carte-lien" key={p.id}>
               <h3>{p.title}</h3>
               <span className="badge">{p.role}</span>
-            </div>
+            </Link>
           ))}
         </div>
       )}

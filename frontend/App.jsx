@@ -6,6 +6,7 @@ import Tasks from './pages/Tasks'
 import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Parametres from './pages/Parametres'
+import ProjetDetail from './pages/ProjetDetail'
 
 export default function App() {
   return (
@@ -20,6 +21,8 @@ export default function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/parametres" element={<Parametres />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:id" element={<ProjetDetail />} />
       </Route>
 
       {/* Tout le reste renvoie au login */}

@@ -30,6 +30,7 @@ export const api = {
     request("/api/projects", { method: "POST", body: JSON.stringify(d) }),
   deleteProject: (id) =>
     request(`/api/projects/${id}`, { method: "DELETE" }),
+    getMembers: (projectId) => request(`/api/projects/${projectId}/members`),
 
   // invitations & collaboration
   createInvitation: (projectId, d) =>
