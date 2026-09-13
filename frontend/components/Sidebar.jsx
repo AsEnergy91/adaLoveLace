@@ -19,6 +19,7 @@ export default function Sidebar() {
       <Link to="/" className={estActif('/') ? 'actif' : ''}>Accueil</Link>
       <Link to="/projects" className={estActif('/projects') ? 'actif' : ''}>Projets</Link>
       <Link to="/tasks" className={estActif('/tasks') ? 'actif' : ''}>Tâches</Link>
+      <Link to="/calendrier" className={estActif('/calendrier') ? 'actif' : ''}>Calendrier</Link>
 
       <Link
         to="/parametres"

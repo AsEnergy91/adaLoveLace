@@ -193,3 +193,15 @@ code {
 .btn-mini { font-size: 0.75rem; padding: 4px 10px; border: 1px solid var(--border); background: var(--card); border-radius: 6px; cursor: pointer; color: var(--text); }
 .btn-mini:hover { background: var(--bg); }
 
+.cal-entete-grande { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.cal-entete-grande button { background: var(--card); border: 1px solid var(--border); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; font-size: 18px; color: var(--text); }
+.cal-grande { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-grande-jour-nom { text-align: center; font-size: 0.8rem; color: var(--muted); font-weight: 600; padding: 6px 0; }
+.cal-grande-case { min-height: 96px; border: 1px solid var(--border); border-radius: 8px; padding: 6px; background: var(--card); }
+.cal-grande-case.vide { background: transparent; border: none; }
+.cal-grande-num { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+.cal-tache { font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cal-tache-todo { background: #f7edda; color: #8a5a12; }
+.cal-tache-in_progress { background: #e6eff9; color: #24567f; }
+.cal-tache-done { background: #dcf1ec; color: #1f6d5f; }
+

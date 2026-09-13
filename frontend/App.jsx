@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Parametres from './pages/Parametres'
 import ProjetDetail from './pages/ProjetDetail'
+import Calendrier from './pages/Calendrier'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/parametres" element={<Parametres />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjetDetail />} />
+        <Route path="/calendrier" element={<Calendrier />} />
       </Route>
 
       {/* Tout le reste renvoie au login */}
