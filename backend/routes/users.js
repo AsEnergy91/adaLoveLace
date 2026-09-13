@@ -1,6 +1,7 @@
 import express from "express";
 import auth from "../middleware/auth.js";
 import { getDB } from "../db/database.js";
+import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 router.use(auth); // tout ici nécessite d'être connecté
@@ -68,5 +69,44 @@ router.delete("/me", async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
+
+// Modifier mon profil (nom)
+router.put('/me', async (req, res) => {
+  try {
+    const db = await getDB()
+    const { name } = req.body
+    if (!name) return res.status(400).json({ error: 'Nom requis' })
+
+    await db.run('UPDATE users SET name = ? WHERE id = ?', [name, req.user.id])
+    const user = await db.get('SELECT id, email, name FROM users WHERE id = ?', [req.user.id])
+    res.json(user)
+  } catch (e) {
+    res.status(500).json({ error: 'Erreur serveur' })
+  }
+})
+
+// Changer mon mot de passe
+router.put('/me/password', async (req, res) => {
+  try {
+    const db = await getDB()
+    const { ancien, nouveau } = req.body
+    if (!ancien || !nouveau) {
+      return res.status(400).json({ error: 'Ancien et nouveau mot de passe requis' })
+    }
+
+    // 1. Vérifier l'ancien mot de passe
+    const user = await db.get('SELECT * FROM users WHERE id = ?', [req.user.id])
+    const ok = await bcrypt.compare(ancien, user.password)
+    if (!ok) return res.status(401).json({ error: 'Ancien mot de passe incorrect' })
+
+    // 2. Chiffrer et enregistrer le nouveau
+    const hash = await bcrypt.hash(nouveau, 10)
+    await db.run('UPDATE users SET password = ? WHERE id = ?', [hash, req.user.id])
+
+    res.json({ message: 'Mot de passe modifié' })
+  } catch (e) {
+    res.status(500).json({ error: 'Erreur serveur' })
+  }
+})
 
 export default router;

@@ -51,4 +51,8 @@ export const api = {
   // --- Utilisateur ---
   getMe: () => request("/api/users/me"),
   deleteMe: () => request("/api/users/me", { method: "DELETE" }),
+    updateMe: (d) =>
+    request("/api/users/me", { method: "PUT", body: JSON.stringify(d) }),
+  changePassword: (d) =>
+    request("/api/users/me/password", { method: "PUT", body: JSON.stringify(d) }),
 };
