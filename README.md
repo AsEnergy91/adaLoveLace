@@ -1,16 +1,50 @@
-# React + Vite
+# AdaLoveLace
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plateforme de gestion de projets — application web full-stack.
+Chaque utilisateur crée un compte et gère ses propres projets,
+invisibles pour les autres.
 
-Currently, two official plugins are available:
+## Stack
+React + Vite · Express · SQLite · bcrypt + JWT
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Installation
 
-## React Compiler
+```bash
+# Backend
+cd backend
+npm install
+cp .env.example .env   # puis remplacez JWT_SECRET par votre propre clé
+node server.js         # -> http://localhost:3001
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Frontend (dans un second terminal, à la racine)
+npm install
+npm run dev            # -> http://localhost:5173
+```
 
-## Expanding the ESLint configuration
+## Variables d'environnement (backend/.env)
+| Variable | Rôle |
+|---|---|
+| JWT_SECRET | Clé qui signe les jetons d'authentification |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Endpoints
+| Méthode | Route | Protégée | Rôle |
+|---|---|---|---|
+| GET | /health | Non | État du serveur |
+| POST | /api/auth/register | Non | Créer un compte |
+| POST | /api/auth/login | Non | Se connecter, reçoit un JWT |
+| GET | /api/projects | Oui | Lister ses projets |
+| POST | /api/projects | Oui | Créer un projet |
+| PUT | /api/projects/:id | Oui | Modifier un projet |
+| DELETE | /api/projects/:id | Oui | Supprimer un projet |
+
+Routes protégées : en-tête `Authorization: Bearer <token>`.
+
+## Tests
+```bash
+cd backend && npm test
+```
+
+## Limites connues
+- Le jeton est stocké en mémoire : recharger la page déconnecte (arbitrage assumé).
+- Les tâches dans les projets : table présente, interface à venir.
+- SQLite convient à cette échelle ; une montée en charge demanderait PostgreSQL.

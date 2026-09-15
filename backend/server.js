@@ -8,13 +8,19 @@ import taskRoutes from "./routes/tasks.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const helmet = require('helmet')
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5174' }));
 app.use(express.json());
+app.use(helmet())
 
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() })
+})
 
 async function start() {
   await initDB();
